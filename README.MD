@@ -1,0 +1,1 @@
+This is actually a Labs for OMSU C++ course from Ashaev I.V.
