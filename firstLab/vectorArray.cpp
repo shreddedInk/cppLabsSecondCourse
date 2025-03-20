@@ -1,53 +1,83 @@
-#include "vectorArray.hpp"
+#include "vectorArr.h"
 
-vectorArr::vectorArr(){
-    massive = new int[5];
-    size = 5;  
+
+
+vectorArr::vectorArr() : size(0), capacity_(5) {
+    massive = new int[capacity_];
 }
 
-vectorArr::vectorArr(size_t s){
-    size = s;
-    massive = new int[s];
-    for (int i = 0; i < s; i++){
-        massive[i] = 0;
+vectorArr::vectorArr(size_t s) : size(s), capacity_(s) {
+    massive = new int[capacity_]{};
+}
+
+vectorArr::vectorArr(size_t s, size_t cap) : size(s), capacity_(cap) {
+    if (capacity_ < size) {
+        capacity_ = size;
     }
+    massive = new int[capacity_]{};
 }
 
-vectorArr::vectorArr(int n, size_t s){
-    size = s;
-    massive = new int[s];
-    for (int i = 0; i < s; i++){
-        massive[i] = n;
-    }
+vectorArr::vectorArr(int n, size_t s) : size(s), capacity_(s) {
+    massive = new int[capacity_];
+    std::fill(massive, massive + size, n);
 }
 
-vectorArr::vectorArr(const vectorArr &vector_arr){
-    size = vector_arr.size;
-    massive = new int[size];
+vectorArr::vectorArr(const vectorArr &vector_arr) : size(vector_arr.size), capacity_(vector_arr.capacity_) {
+    massive = new int[capacity_];
     std::copy(vector_arr.massive, vector_arr.massive + size, massive);
 }
 
-vectorArr::vectorArr(vectorArr&& vector){
-    size = vector.size;
-    massive = vector.massive;
+vectorArr::vectorArr(vectorArr&& vector) : size(vector.size), capacity_(vector.capacity_), massive(vector.massive) {
     vector.massive = nullptr;
     vector.size = 0;
+    vector.capacity_ = 0;
+}
+
+
+vectorArr::~vectorArr() {
+    std::cout << "Destructor" << std::endl;
+    delete[] massive;
+}
+
+size_t vectorArr::getSize() const {
+    return size;
+}
+
+size_t vectorArr::capacity() const {
+    return capacity_;
+}
+
+void vectorArr::reserve(size_t newCapacity) {
+    if (newCapacity <= capacity_) {
+        return;
+    }
+
+    int* newMassive = new int[newCapacity]{};
+    std::copy(massive, massive + size, newMassive);
+
+    delete[] massive;
+    massive = newMassive;
+    capacity_ = newCapacity;
 }
 
 void vectorArr::resize(size_t newSize) {
-    int* newMassive = new int[newSize]{};
-
-    size_t minSize = (newSize < size) ? newSize : size;
-    std::copy(massive, massive + minSize, newMassive);
-
-    delete[] massive;
-
-    massive = newMassive;
+    if (newSize > capacity_) {
+        reserve(newSize);
+    }
     size = newSize;
 }
 
-size_t vectorArr::getSize() const{
-    return size;
+void vectorArr::pushBack(int x) {
+    if (size >= capacity_) {
+        reserve(capacity_ * 2);
+    }
+    massive[size++] = x;
+}
+
+void vectorArr::popBack() {
+    if (size > 0) {
+        --size;
+    }
 }
 
 vectorArr& vectorArr::operator=(const vectorArr &vector_arr) {
@@ -58,13 +88,17 @@ vectorArr& vectorArr::operator=(const vectorArr &vector_arr) {
     delete[] massive;
 
     size = vector_arr.size;
-    massive = new int[size];
+    capacity_ = vector_arr.capacity_;
+    massive = new int[capacity_];
     std::copy(vector_arr.massive, vector_arr.massive + size, massive);
 
     return *this;
 }
 
-int& vectorArr::operator[](size_t index){
+int& vectorArr::operator[](size_t index) {
+    if (index >= size) {
+        throw std::out_of_range("Index out of range");
+    }
     return massive[index];
 }
 
@@ -117,9 +151,4 @@ std::istream& operator>>(std::istream& is, vectorArr& vector) {
         is >> vector.massive[i];
     }
     return is;
-}
-
-vectorArr::~vectorArr(){
-    std::cout << "Destructor" << std::endl;
-    delete[] massive;
 }
