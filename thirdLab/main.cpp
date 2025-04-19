@@ -1,48 +1,65 @@
 #include <iostream>
 #include "CircularList.h"
+#include <locale>
+#include <windows.h>
 
 int main() {
+    SetConsoleOutputCP(65001); 
+
     CircularList<int> list;
 
-    std::cout << "Добавим числа 1, 2, 3 в список:\n";
+    std::cout << "=== Тест: Вставка элементов ===\n";
+    std::cout << "Добавим числа 1, 2, 3 в список...\n";
     list.insert(1);
     list.insert(2);
     list.insert(3);
 
     std::cout << "Содержимое списка: ";
-    auto it = list.getIterator();
-    for (it->start(); !it->finish(); it->next()) {  // Используем -> для обращения к членам итератора
-        std::cout << it->getValue() << " ";  // Используем -> для обращения к членам итератора
+    Iterator<int>* it = list.getIterator();
+    for (it->start(); !it->finish(); it->next()) {
+        std::cout << it->getValue() << " ";
     }
     std::cout << "\nРазмер списка: " << list.size() << "\n";
+    delete it;
 
-    std::cout << "\nИщем элемент 2 и вставим перед ним 99:\n";
-    auto found = list.find(2);
+    std::cout << "\n=== Тест: Вставка перед элементом ===\n";
+    std::cout << "Ищем элемент 2 и вставим перед ним 99...\n";
+    Iterator<int>* found = list.find(2);
     if (found) {
         list.insertAt(99, found);
     }
 
-    std::cout << "Список после вставки: ";
+    std::cout << "Содержимое списка: ";
     it = list.getIterator();
     for (it->start(); !it->finish(); it->next()) {
         std::cout << it->getValue() << " ";
     }
+    std::cout << "\n";
+    delete it;
+    delete found;
 
-    std::cout << "\n\nУдалим элемент 99:\n";
+    std::cout << "\n=== Тест: Удаление элемента ===\n";
+    std::cout << "Удалим элемент 99...\n";
     found = list.find(99);
     if (found) {
         list.removeAt(found);
+        delete found;
     }
 
-    std::cout << "Список после удаления: ";
+    std::cout << "Содержимое списка: ";
     it = list.getIterator();
     for (it->start(); !it->finish(); it->next()) {
         std::cout << it->getValue() << " ";
     }
+    std::cout << "\n";
+    delete it;
 
-    std::cout << "\n\nОчистим список:\n";
+    std::cout << "\n=== Тест: Очистка списка ===\n";
+    std::cout << "Очищаем список...\n";
     list.makeEmpty();
+
     std::cout << "Список пуст? " << (list.isEmpty() ? "Да" : "Нет") << "\n";
+    std::cout << "Размер списка: " << list.size() << "\n";
 
     return 0;
 }
