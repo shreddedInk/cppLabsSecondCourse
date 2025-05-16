@@ -1,14 +1,14 @@
-#ifndef BINARY_TREE
-#define BINARY_TREE
+#ifndef BINARY_TREE_H
+#define BINARY_TREE_H
 
 #include <iostream>
 #include <queue>
 #include <stack>
-#include <ostream>
+#include <vector>
+#include <stdexcept>
 
 class binaryTree {
 private:
-
     struct Node {
         int value;
         Node* left;
@@ -37,21 +37,25 @@ private:
     }
 
     void printLeftToRight(Node* node) const {
-        if (node==nullptr) return;
+        if (node == nullptr) return;  
         printLeftToRight(node->left);
         std::cout << node->value << " ";
         printLeftToRight(node->right);
     }
+
+    int countEvenNumbers(Node* node) const {
+        if (node == nullptr) return 0;
+        
+        int count = (node->value % 2 == 0) ? 1 : 0;
+        return count + countEvenNumbers(node->left) + countEvenNumbers(node->right);
+    }
     
 public:
-
     binaryTree() : root(nullptr) {}
     
-    binaryTree(int value) : root(new Node(value)) {}
+    explicit binaryTree(int value) : root(new Node(value)) {} 
     
-    binaryTree(const binaryTree& other) {
-        root = copyTree(other.root);
-    }
+    binaryTree(const binaryTree& other) : root(copyTree(other.root)) {} 
     
     ~binaryTree() {
         clear(root);
@@ -68,8 +72,8 @@ public:
 
     binaryTree& operator=(const binaryTree& other) {
         if (this != &other) {
-            clear(root);
-            root = copyTree(other.root);
+            binaryTree temp(other);
+            std::swap(root, temp.root);
         }
         return *this;
     }
@@ -126,10 +130,13 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const binaryTree& tree) {
         stream << "Tree: ";
         tree.printLeftToRight(tree.root);
-        stream << std::endl;
-        return stream;
+        return stream << std::endl;
     }
-  
+
+    int getEvenCount() const {
+        return countEvenNumbers(root);
+    }
+
 };
 
-#endif
+#endif 
