@@ -50,6 +50,12 @@ private:
         return count + countEvenNumbers(node->left) + countEvenNumbers(node->right);
     }
     
+    bool positiveCheck(Node* node) const {
+        if (node == nullptr) return true;
+        if (node->value < 0) return false;
+        return positiveCheck(node->left) && positiveCheck(node->right);
+    }
+
 public:
     binaryTree() : root(nullptr) {}
     
@@ -61,14 +67,9 @@ public:
         clear(root);
     }
     
-    binaryTree& operator=(binaryTree&& other) noexcept {
-        if (this != &other) {
-            clear(root);
-            root = other.root;
-            other.root = nullptr;
-        }
-        return *this;
-    }
+   binaryTree(binaryTree&& other) noexcept : root(other.root) {
+    other.root = nullptr;
+}
 
     binaryTree& operator=(const binaryTree& other) {
         if (this != &other) {
@@ -135,6 +136,10 @@ public:
 
     int getEvenCount() const {
         return countEvenNumbers(root);
+    }
+
+    bool checkForPositiveNumbers() const {
+        return positiveCheck(root);
     }
 
 };
