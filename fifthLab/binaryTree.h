@@ -161,7 +161,7 @@ public:
         }
     }
     
-//Second task
+//Second/Third/Fifth tasks
 
     int getEvenCount() const {
         return countEvenNumbers(root);
