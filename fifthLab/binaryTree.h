@@ -7,6 +7,7 @@
 #include <vector>
 #include <stdexcept>
 #include <numeric>
+#include <climits>
 
 class binaryTree {
 private:
@@ -77,6 +78,18 @@ private:
         if (node->value < min || node->value > max) return false;
         return isBSTUtil(node->left, min, node->value - 1) && 
                isBSTUtil(node->right, node->value + 1, max);
+    }
+
+    bool positiveCheck(Node* node) const {
+        if (node == nullptr) return true;
+        if (node -> value < 0) return false;
+        return positiveCheck(node->left) && positiveCheck(node->right);
+    }
+
+    int countEvenNumbers(Node* node) const {
+        if (node == nullptr) return 0;
+        int count = (node->value % 2 == 0) ? 1 : 0;
+        return count + countEvenNumbers(node->left) + countEvenNumbers(node->right);
     }
 
 public:
@@ -151,34 +164,11 @@ public:
 //Second task
 
     int getEvenCount() const {
-        if (!root) return 0;
-        std::queue<Node*> q;
-        q.push(root);
-        int count = 0;
-        
-        while (!q.empty()) {
-            Node* current = q.front();
-            q.pop();
-            if (current->value % 2 == 0) count++;
-            if (current->left) q.push(current->left);
-            if (current->right) q.push(current->right);
-        }
-        return count;
+        return countEvenNumbers(root);
     }
 
     bool checkForPositiveNumbers() const {
-        if (!root) return true;
-        std::stack<Node*> s;
-        s.push(root);
-        
-        while (!s.empty()) {
-            Node* current = s.top();
-            s.pop();
-            if (current->value < 0) return false;
-            if (current->right) s.push(current->right);
-            if (current->left) s.push(current->left);
-        }
-        return true;
+        return positiveCheck(root);
     }
 
     void removeAllLeaves() {
@@ -205,12 +195,26 @@ public:
         return stream;
     }
 
+    void printRotated(std::ostream& stream) const {
+        printNineteenDegrees(stream, root);
+    }
+
 private:
     void printLeftToRight(Node* node) const {
         if (!node) return;
         printLeftToRight(node->left);
         std::cout << node->value << " ";
         printLeftToRight(node->right);
+    }
+
+    void printNineteenDegrees(std::ostream& stream, Node* node, int level = 0) const {
+        if (!node) return;
+        printNineteenDegrees(stream, node->right, level+1);
+        for (int i=0; i<level;++i){
+            stream << "   ";
+        }
+        stream << node->value << "\n";
+        printNineteenDegrees(stream, node->left, level+1);
     }
 };
 
