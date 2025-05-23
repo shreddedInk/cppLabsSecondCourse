@@ -1,0 +1,45 @@
+void push(int value, const std::vector<int>& seq) {
+        if (seq.empty()) {
+            if (root) {
+                root->value = value;
+            } else {
+                root = new Node(value);
+            }
+            return;
+        }
+    
+        if (!root) {
+            throw std::runtime_error("Invalid path: tree is empty but path is not empty");
+        }
+    
+        Node* current = root;
+        Node* parent = nullptr;
+        size_t i = 0;
+    
+        while (current && i < seq.size()) {
+            parent = current;
+            if (seq[i] == 0) {
+                current = current->left;
+            } else if (seq[i] == 1) {
+                current = current->right;
+            } else {
+                throw std::runtime_error("Invalid path: sequence contains values other than 0 and 1");
+            }
+            i++;
+        }
+    
+        if (i < seq.size()) {
+            throw std::runtime_error("Invalid path: path goes through null node");
+        }
+    
+        if (current) {
+            current->value = value;
+        } else {
+            if (seq.back() == 0) {
+                parent->left = new Node(value);
+            } else {
+                parent->right = new Node(value);
+            }
+        }
+    }
+    
