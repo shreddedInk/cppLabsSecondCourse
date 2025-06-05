@@ -19,7 +19,7 @@ private:
     std::list<T> insertion_order;
 
 public:
-    // Iterator class
+
     class Iterator {
     private:
         typename std::list<T>::iterator it;
