@@ -1,5 +1,5 @@
 #include <iostream>
-#include "linkedHashSet.h" 
+#include "LinkedHashSet.h" 
 
 void test() {
     LinkedHashSet<int> set;
