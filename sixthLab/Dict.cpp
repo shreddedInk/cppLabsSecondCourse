@@ -1,4 +1,4 @@
-#include "dict.h"
+#include "Dict.h"
 #include <algorithm>
 
 
