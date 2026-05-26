@@ -1,4 +1,4 @@
-#include "binaryTree.h"
+#include "BinaryTree.h"
 #include <iostream>
 
 void testConstructors() {
