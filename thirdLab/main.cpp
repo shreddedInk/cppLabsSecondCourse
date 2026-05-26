@@ -8,8 +8,7 @@ int main() {
 
     CircularList<int> list;
 
-    std::cout << "=== Тест: Вставка элементов ===\n";
-    std::cout << "Добавим числа 1, 2, 3 в список...\n";
+    std::cout << "Добавим числа 1, 2, 3 в список\n";
     list.insert(1);
     list.insert(2);
     list.insert(3);
@@ -22,7 +21,6 @@ int main() {
     std::cout << "\nРазмер списка: " << list.size() << "\n";
     delete it;
 
-    std::cout << "\n=== Тест: Вставка перед элементом ===\n";
     std::cout << "Ищем элемент 2 и вставим перед ним 99...\n";
     Iterator<int>* found = list.find(2);
     if (found) {
@@ -38,7 +36,6 @@ int main() {
     delete it;
     delete found;
 
-    std::cout << "\n=== Тест: Удаление элемента ===\n";
     std::cout << "Удалим элемент 99...\n";
     found = list.find(99);
     if (found) {
@@ -54,7 +51,6 @@ int main() {
     std::cout << "\n";
     delete it;
 
-    std::cout << "\n=== Тест: Очистка списка ===\n";
     std::cout << "Очищаем список...\n";
     list.makeEmpty();
 
